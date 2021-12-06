@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Query Resolver</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<style>
+		body{
+			margin: 0;
+			background-color: grey;
+			font-family: arial,sans-serif,Time New Roman;
+		}
+		#header{
+		width: 100%;
+		height: 60px;
+		background-color: #1e1e2f;
+		box-shadow: 0px 4px 2px #1e1e2f;
+		}
+		#header h1{
+			width: 1024px;
+			margin: 0px auto;
+			color: purple;
+			padding: 12px;
+		}
+		#container{
+			width: 800px;
+			height: 300px;
+			margin: 0px auto;
+			margin-top: 20px;
+			background-color: peachpuff;
+			border: 3px solid #333;
+			overflow: scroll;
+		}
+		#controls{
+			width: 1024px;
+			margin: 0px auto;
+		}
+		
+		textbox{
+            padding-left: 200px;
+            margin-left: 200px;
+			resize: auto;
+			width: 800px;
+		}
+		#send{
+			font-size: 24px;
+			position: absolute;
+		}
+		.username{
+			color: blue;
+			font-weight: bold;
+		}
+		.proctor{
+			color: black;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<div id="header">
+			<h1>Query Resolver</h1>
+	</div>
+	<div id="container">
+		
+	</div>
+	<div id="controls">
+		<textarea id="textbox" placeholder="Enter your message"></textarea>
+		<button id="send">Send</button>
+		<br>
+		<input type="checkbox" id="enter" checked/>
+		<label>Send on enter</label>
+	</div>
+	<script>
+		
+		var username = "";
+		
+		function send_message(message){
+		
+			var prevState = $("#container").html();
+				
+			if(prevState.length > 5){
+				prevState = prevState + "<br>";
+			}
+
+			$("#container").html(prevState + "<span class='current_message'> "+ "<span class='proctor'>Proctor: </span>" + message + "</span>");
+			$(".current_message").hide();
+			$(".current_message").delay(500).fadeIn();
+			$(".current_message").removeClass("current_message");
+			
+		
+		}
+		
+		function get_username(){
+			send_message("Hello! What is your query?");
+		}
+		
+		function ai(message){
+			if(username.length < 3){
+				username = message;
+				send_message("Nice to meet you " + username + ", how are you doing?");
+			}
+			
+			if(message.indexOf("how are you")>=0 || message.indexOf("how are you?")>=0){
+				send_message("Thanks, I am fine. How was your day?");
+			}
+            
+            if(message.indexOf("what about you")>=0 || message.indexOf("what about you?")>=0){
+				send_message("Thanks, I am fine. How was your day?");
+			}
+            
+            if(message.indexOf("You tell")>=0 || message.indexOf("You tell?")>=0){
+				send_message("Thanks, I am fine. How was your day?");
+			}
+			
+			if(message.indexOf("how was your day")>=0 || message.indexOf("how was your day?")>=0){
+				send_message("Great. What are you doing?");
+			}
+            
+            if(message.indexOf("how was yours")>=0 || message.indexOf("how was yours?")>=0){
+				send_message("Great. What are you doing?");
+			}
+			
+			if(message.indexOf("what are you doing")>=0 || message.indexOf("what are you doing?")>=0){
+				send_message("nothing much just chilling in the town.");
+			}
+            
+            if(message.indexOf("what are you doing")>=0 || message.indexOf("what are you doing?")>=0){
+				send_message("nothing much just chilling in the town.");
+			}
+		}
+		
+		$(document).ready(function(){
+			
+			get_username();
+			
+			$("#textbox").keypress(function(event){
+				if(event.which == 13){
+					if($("#enter").prop("checked")){
+						$("#send").click();
+						event.preventDefault();
+					}
+				}
+			});
+			
+			$("#send").click(function(){
+				
+				var username = "<span class='username'>You: </span>";
+				
+				var newMessage = $("#textbox").val();
+				$("#textbox").val("");
+				
+				$("#container").scrollTop($("#container").prop("scrollHeight"));
+				
+				var prevState = $("#container").html();
+				
+				if(prevState.length > 5){
+					prevState = prevState + "<br>";
+				}
+
+				$("#container").html(prevState + username + newMessage);
+							
+				ai(newMessage);
+			});
+		});
+	</script>
+</body>
+</html>
